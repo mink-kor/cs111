@@ -1,6 +1,6 @@
-/*Min_Kim_030926_CS111_I put the CSS code */
+/*Min_Kim_03-09-26_CS111_I put the CSS styles for CS111 and page2 */
 
-/*background color*/
+/*background color & text color for the whole page*/
 body {
     background-color: #1b9b44;
     color: #f2db32;
@@ -12,16 +12,18 @@ h1 {
     color: #f2db32;
     font-family: Georgia, "Times New Roman", serif;
 }
-/*heading 2 and 3 color*/
+/*heading 2 and 3 text color*/
 h2, h3 {
     color: #f2db32;
 }
 
+/* paragraph font size*/
 p {
     font-size: 16px;
     line-height: 1.7;
 }
 
+/*link color*/
 a {
     color: #f2db32;
     text-decoration: none;
@@ -30,4 +32,10 @@ a {
 p {
     font-size: 16px;
     line-height: 1.7;
+}
+
+/* Custom formatting: adds an underline and color change when hovering over links */
+a:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
