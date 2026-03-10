@@ -1,0 +1,33 @@
+/*Min_Kim_030926_CS111_I put the CSS code */
+
+/*background color*/
+body {
+    background-color: #1b9b44;
+    color: #f2db32;
+    margin: 40px;
+}
+
+/*heading 1 color and font*/
+h1 {
+    color: #f2db32;
+    font-family: Georgia, "Times New Roman", serif;
+}
+/*heading 2 and 3 color*/
+h2, h3 {
+    color: #f2db32;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+a {
+    color: #f2db32;
+    text-decoration: none;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.7;
+}
