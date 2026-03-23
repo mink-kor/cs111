@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frame & Light — The Art of Cinematography</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════
+       FALL CINEMATIC PALETTE
+    ═══════════════════════════════════════ */
+    :root {
+      --ink:       #0D0906;
+      --deep:      #150C07;
+      --surface:   #1C1108;
+      --panel:     #231508;
+      --amber:     #C8820A;
+      --gold:      #E0A830;
+      --ember:     #B83A10;
+      --cream:     #F0DFB8;
+      --parchment: #DFC89A;
+      --muted:     #8A7055;
+      --border:    #3A2510;
+    }
+
+    /* ═══════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--ink);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.85;
+      cursor: crosshair;
+      overflow-x: hidden;
+    }
+
+    /* ── Film Grain ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+      animation: grain 0.4s steps(1) infinite;
+    }
+
+    @keyframes grain {
+      0%,100%{ background-position:0 0 }10%{ background-position:-5% -10% }
+      20%{ background-position:-15% 5% }30%{ background-position:7% -25% }
+      40%{ background-position:-5% 25% }50%{ background-position:-15% 10% }
+      60%{ background-position:15% 0 }70%{ background-position:0 15% }
+      80%{ background-position:3% 35% }90%{ background-position:-10% 10% }
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes burnIn  { from{opacity:0;letter-spacing:24px} to{opacity:1;letter-spacing:6px} }
+    @keyframes scroll  { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ═══════════════════════════════════════
+       FILM STRIP COMPONENT
+    ═══════════════════════════════════════ */
+    .filmstrip {
+      display: flex;
+      background: var(--ink);
+      padding: 6px 0;
+      overflow: hidden;
+      border-bottom: 2px solid var(--border);
+    }
+    .filmstrip.top-border { border-top: 2px solid var(--border); border-bottom: none; }
+    .filmstrip-track {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 24px;
+      animation: scroll 12s linear infinite;
+    }
+    .hole {
+      width:14px; height:14px; border-radius:3px;
+      background: var(--border); flex-shrink:0; opacity:0.6;
+    }
+
+    /* ═══════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════ */
+    header {
+      background: var(--deep);
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .header-inner {
+      padding: 72px 40px 60px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(200,130,10,0.09) 0%, transparent 68%);
+    }
+
+    .issue-label {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--amber);
+      border: 1px solid var(--amber);
+      padding: 5px 16px;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 900;
+      color: var(--cream);
+      letter-spacing: 6px;
+      line-height: 1;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: burnIn 1s ease forwards 0.5s;
+    }
+
+    header h1 span {
+      color: var(--amber);
+      display: block;
+    }
+
+    .header-rule {
+      width: 80px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      margin: 28px auto;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 1s;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--parchment);
+      letter-spacing: 2px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 1.1s;
+    }
+
+    .header-meta {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      margin-top: 40px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      color: var(--muted);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 1.3s;
+    }
+
+    /* ═══════════════════════════════════════
+       PULL QUOTE
+    ═══════════════════════════════════════ */
+    .pull-quote {
+      background: var(--surface);
+      border-left: 4px solid var(--amber);
+      border-right: 4px solid var(--amber);
+      text-align: center;
+      padding: 36px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pull-quote::before {
+      content: '"';
+      position: absolute;
+      top: -30px; left: 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 12rem;
+      color: var(--border);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .pull-quote blockquote {
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--parchment);
+      position: relative;
+      z-index: 1;
+    }
+
+    .pull-quote cite {
+      display: block;
+      margin-top: 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 4px;
+      color: var(--amber);
+      font-style: normal;
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════
+       MAIN & COLUMNS
+    ═══════════════════════════════════════ */
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 64px 32px 80px;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    /* Column heading */
+    .col-heading { display:flex; align-items:center; gap:16px; margin-bottom:28px; }
+
+    .col-number {
+      font-family: 'Cinzel', serif;
+      font-size: 3rem; font-weight: 900;
+      color: var(--border); line-height: 1;
+    }
+
+    .col-title-group h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--amber); letter-spacing: 3px; text-transform: uppercase;
+    }
+
+    .col-title-group .sub {
+      font-size: 0.78rem; font-style: italic;
+      color: var(--muted); letter-spacing: 1px; margin-top: 3px;
+    }
+
+    .col-divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, var(--amber), transparent);
+      margin-bottom: 28px;
+    }
+
+    .col p { color: var(--cream); margin-bottom: 22px; font-weight: 300; text-align: justify; }
+
+    .col p:first-of-type::first-letter {
+      font-family: 'Cinzel', serif;
+      font-size: 4.5rem; font-weight: 900;
+      float: left; line-height: 0.75;
+      margin-right: 10px; margin-top: 8px;
+      color: var(--ember);
+      text-shadow: 2px 2px 12px rgba(184,58,16,0.4);
+    }
+
+    /* ═══════════════════════════════════════
+       IMAGE WRAP
+    ═══════════════════════════════════════ */
+    figure.wrapped {
+      float: right;
+      margin: 4px 0 24px 32px;
+      width: 48%;
+      position: relative;
+    }
+
+    figure.wrapped::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border: 1px solid var(--border);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    figure.wrapped img {
+      width: 100%; display: block;
+      position: relative; z-index: 1;
+      filter: sepia(20%) contrast(1.05) brightness(0.92);
+      transition: filter 0.5s ease;
+    }
+
+    figure.wrapped:hover img {
+      filter: sepia(0%) contrast(1.1) brightness(1.0);
+    }
+
+    figure.wrapped figcaption {
+      background: var(--panel);
+      border-left: 3px solid var(--amber);
+      padding: 8px 12px;
+      font-size: 0.72rem; font-style: italic;
+      color: var(--muted); line-height: 1.5;
+      position: relative; z-index: 1;
+    }
+
+    /* ═══════════════════════════════════════
+       ORNAMENT DIVIDER
+    ═══════════════════════════════════════ */
+    .ornament {
+      text-align: center;
+      margin: 64px 0 56px;
+      position: relative;
+    }
+
+    .ornament::before, .ornament::after {
+      content: '';
+      position: absolute; top: 50%;
+      width: 38%; height: 1px;
+    }
+    .ornament::before { left:0; background: linear-gradient(90deg, transparent, var(--border)); }
+    .ornament::after  { right:0; background: linear-gradient(90deg, var(--border), transparent); }
+
+    .ornament-inner {
+      display: inline-flex;
+      align-items: center; gap: 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem; letter-spacing: 6px;
+      color: var(--amber); text-transform: uppercase;
+    }
+
+    .ornament-dot { width:5px; height:5px; background:var(--amber); border-radius:50%; }
+
+    /* ═══════════════════════════════════════
+       CLEARFIX
+    ═══════════════════════════════════════ */
+    .clearfix::after { content:''; display:table; clear:both; }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    footer {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 32px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .footer-left, .footer-right {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; letter-spacing: 4px;
+      color: var(--muted); text-transform: uppercase;
+      line-height: 2.4;
+    }
+    .footer-right { text-align: right; }
+
+    .footer-center { text-align: center; }
+
+    .footer-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 900;
+      letter-spacing: 4px; color: var(--amber); text-transform: uppercase;
+    }
+
+    .footer-tagline {
+      font-size: 0.75rem; font-style: italic;
+      color: var(--muted); margin-top: 6px;
+    }
+
+    .footer-rule {
+      width: 50px; height: 1px;
+      background: var(--border);
+      margin: 18px auto;
+    }
+
+    .footer-bottom {
+      background: var(--ink);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 16px 32px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.52rem; letter-spacing: 4px;
+      color: var(--border); text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .columns { grid-template-columns: 1fr; gap: 40px; }
+      figure.wrapped { float:none; width:100%; margin: 0 0 24px 0; }
+      .footer-inner { grid-template-columns: 1fr; text-align:center; }
+      .footer-right { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="filmstrip">
+      <div class="filmstrip-track">
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+      </div>
+    </div>
+
+    <div class="header-inner">
+      <div class="issue-label">Autumn Edition &nbsp;·&nbsp; Volume I</div>
+      <h1>Frame <span>&amp; Light</span></h1>
+      <div class="header-rule"></div>
+      <p class="subtitle">The Art &amp; Soul of Cinematography</p>
+      <div class="header-meta">
+        <span>Light</span><span>·</span>
+        <span>Composition</span><span>·</span>
+        <span>Movement</span><span>·</span>
+        <span>Color</span>
+      </div>
+    </div>
+
+    <div class="filmstrip top-border">
+      <div class="filmstrip-track">
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PULL QUOTE -->
+  <div class="pull-quote">
+    <blockquote>
+      A film is never really good unless the camera is an eye in the head of a poet.
+    </blockquote>
+    <cite>— Orson Welles</cite>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="columns">
+
+      <!-- LEFT COLUMN -->
+      <div class="col">
+        <div class="col-heading">
+          <div class="col-number">01</div>
+          <div class="col-title-group">
+            <h2>Light &amp; Composition</h2>
+            <div class="sub">The invisible architecture of the frame</div>
+          </div>
+        </div>
+        <div class="col-divider"></div>
+
+        <div class="clearfix">
+          <figure class="wrapped">
+            <img src="image.png" alt="A cinematographer composing a dramatic cinematic shot" />
+            <figcaption>A Director of Photography sculpts light<br>to guide the audience's eye.</figcaption>
+          </figure>
+
+          <p>
+            Cinematography is the art of visual storytelling — it is the invisible language that shapes how an audience feels before a single word of dialogue is spoken. At its core, it is the discipline of capturing moving images through the thoughtful control of light, lens, and camera placement. A Director of Photography works to translate a director's vision into a living, breathing visual world. Every shadow, every beam of amber autumn sunlight filtering through a window, every carefully chosen angle carries emotional weight and narrative meaning that words alone could never convey.
+          </p>
+          <p>
+            Composition is one of the most fundamental tools a cinematographer commands. The rule of thirds, leading lines, symmetry, and negative space are not merely academic concepts — they are visual grammar that the eye reads instinctively. Directors of Photography like Roger Deakins and Emmanuel Lubezki have built entire careers on the mastery of composition, using the frame as a canvas to guide the viewer's gaze and evoke precise emotional responses. A perfectly composed shot communicates isolation, intimacy, power, or vulnerability without a single word of dialogue being spoken.
+          </p>
+          <p>
+            Lighting, perhaps more than any other element, defines the emotional tone of a scene. Hard lighting creates drama and tension, its sharp shadows cutting across faces like emotional scars. Soft, diffused light speaks of vulnerability and warmth. Cinematographers spend hours constructing lighting setups that appear completely natural on screen. This paradox is one of the great beauties of the craft: the more invisible the artistry, the more powerful its effect on the audience who sit in the dark, unaware of the elaborate architecture surrounding every frame.
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col">
+        <div class="col-heading">
+          <div class="col-number">02</div>
+          <div class="col-title-group">
+            <h2>Movement &amp; Color</h2>
+            <div class="sub">The kinetic pulse beneath every frame</div>
+          </div>
+        </div>
+        <div class="col-divider"></div>
+
+        <p>
+          Camera movement is the heartbeat of cinema. A slow, deliberate dolly shot can build unbearable suspense; a handheld, shaky follow shot drops the audience directly into chaos and confusion. The Steadicam, invented by Garrett Brown in the 1970s, revolutionized the way filmmakers could move through space, creating the sensation of effortless, floating motion that had never before been possible. From the breathtaking tracking shots of Stanley Kubrick to the frantic, intimate handheld work of Paul Greengrass, movement is inseparable from meaning in the grammar of visual storytelling.
+        </p>
+        <p>
+          The choice of focal length dramatically shapes a viewer's experience of movement and space. A wide-angle lens stretches depth and makes even slow movement appear urgent and dynamic, while a long telephoto lens compresses space and gives subjects a sense of being watched, surveyed, or trapped. Cinematographers choose lenses the way a painter chooses a brush — each one delivers a fundamentally different emotional texture to the image. The marriage of lens and camera movement is one of the most expressive decisions in all of filmmaking, capable of transforming an ordinary scene into something sublime and unforgettable.
+        </p>
+        <p>
+          Color grading ties everything together in the final stage of visual storytelling. In post-production, the palette of a film is carefully sculpted to reinforce its themes — the cold blue-greens of a thriller, the warm amber and crimson of a period romance, the desaturated grey of a war drama. This is why cinematography is considered one of the most complete art forms: it synthesizes painting, architecture, photography, and emotion into a single unified visual experience unfolding in time. Each frame is both a photograph and a promise — a window held open for just a moment before the story moves on.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="ornament">
+      <div class="ornament-inner">
+        <div class="ornament-dot"></div>
+        <span>Finis</span>
+        <div class="ornament-dot"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="filmstrip top-border">
+      <div class="filmstrip-track">
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+      </div>
+    </div>
+
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div>Topics</div>
+        <div>Light &amp; Shadow</div>
+        <div>Lens &amp; Focal Length</div>
+        <div>Camera Movement</div>
+        <div>Color Grading</div>
+      </div>
+      <div class="footer-center">
+        <div class="footer-logo">Frame &amp; Light</div>
+        <div class="footer-tagline">Painting with light since the first frame.</div>
+        <div class="footer-rule"></div>
+        <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:3px;color:var(--border);text-transform:uppercase;">
+          🍂 &nbsp; Autumn &nbsp; 🍂
+        </div>
+      </div>
+      <div class="footer-right">
+        <div>Notable DPs</div>
+        <div>Roger Deakins</div>
+        <div>Emmanuel Lubezki</div>
+        <div>Gordon Willis</div>
+        <div>Vittorio Storaro</div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      CS 111 Web Development &nbsp;·&nbsp; Cinematography Edition &nbsp;·&nbsp; Fall Theme &nbsp;·&nbsp; Huntington University
+    </div>
+  </footer>
+
+</body>
+</html>
